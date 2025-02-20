@@ -74,3 +74,4 @@ const Candidates = () => {
 };
 
 export default Candidates;
+// this is candiatepage 
