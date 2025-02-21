@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocati
 import { db } from '../firebase'; // Firestore
 
 const Candidates = () => {
-  const [candidates, setCandidates] = useState([]);
+  const [candidatesByPosition, setCandidatesByPosition] = useState({}); // Store grouped candidates by position
   const [votedCandidateId, setVotedCandidateId] = useState(null); // Track voted candidate
   const navigate = useNavigate(); // Use navigate hook to redirect
   const location = useLocation();
@@ -14,8 +14,19 @@ const Candidates = () => {
     const fetchCandidates = async () => {
       const candidatesCollection = collection(db, 'candidates');
       const candidatesSnapshot = await getDocs(candidatesCollection);
+
+      // Group candidates by position
       const candidatesList = candidatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setCandidates(candidatesList);
+      const groupedCandidates = candidatesList.reduce((acc, candidate) => {
+        const { position } = candidate;
+        if (!acc[position]) {
+          acc[position] = [];
+        }
+        acc[position].push(candidate);
+        return acc;
+      }, {});
+
+      setCandidatesByPosition(groupedCandidates); // Store the grouped candidates
     };
 
     fetchCandidates();
@@ -26,27 +37,21 @@ const Candidates = () => {
       const candidateRef = doc(db, 'candidates', candidateId);
       const userRef = doc(db, 'users', userId);
 
-      // Ensure currentVotes is a valid number, if not, initialize it to 0
       const newVotes = isNaN(currentVotes) ? 1 : currentVotes + 1;
 
-      // Update the votes field in Firestore
+      // Update votes in Firestore
       await updateDoc(candidateRef, {
         votes: newVotes,
       });
 
-      // Mark user as voted in the "users" collection
+      // Mark user as voted
       await updateDoc(userRef, {
-        voted: true, // Mark user as having voted
+        voted: true,
       });
 
-      // Disable the button after voting
       setVotedCandidateId(candidateId);
-
-      // Show success alert
       alert('Vote cast successfully!');
-
-      // Navigate to HomeScreen
-      navigate("/home");// Redirect after successful vote
+      navigate('/home'); // Redirect to home
     } catch (error) {
       console.error('Error casting vote: ', error);
       alert('Failed to cast vote. Please try again.');
@@ -54,24 +59,31 @@ const Candidates = () => {
   };
 
   return (
-    <div>
-      <h2>Candidates List</h2>
-      <ul>
-        {candidates.map(candidate => (
-          <li key={candidate.id} style={{ marginBottom: '10px' }}>
-            <span>{candidate.name} - Votes: {candidate.votes || 0} </span>
-            <button 
-              onClick={() => handleVote(candidate.id, candidate.votes)} 
-              disabled={votedCandidateId === candidate.id} // Disable button if already voted
-            >
-              {votedCandidateId === candidate.id ? 'Voted' : 'Vote'}
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="candidates-container">
+      <h2 className="candidates-header">Candidates List</h2>
+      {/* Iterate over positions and candidates */}
+      {Object.entries(candidatesByPosition).map(([position, candidates]) => (
+        <div key={position} className="position-section">
+          <h3 className="position-title">{position}</h3> {/* Display position heading */}
+          <ul className="candidates-list">
+            {candidates.map(candidate => (
+              <li key={candidate.id} className="candidate-item">
+                <span className="candidate-name">{candidate.name}</span>
+                <button
+                  className="vote-btn"
+                  onClick={() => handleVote(candidate.id, candidate.votes)}
+                  disabled={votedCandidateId === candidate.id} // Disable button if voted
+                >
+                  {votedCandidateId === candidate.id ? 'Voted' : 'Vote'}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 };
 
 export default Candidates;
-// this is candiatepage 
+// group

@@ -5,6 +5,7 @@ import Candidates from './Candidates'; // Import the Candidates component
 import Login from './Login'; // Import your Login component
 import AdminLogin from './AdminLogin'; // Import the AdminLogin component
 import Results from './Results'; // Import your Results component (admin results page)
+import '../App.css'; // <-- Ensure App.css is imported
 
 function App() {
   return (

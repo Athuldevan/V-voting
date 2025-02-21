@@ -4,7 +4,7 @@ import { db } from '../firebase'; // Firestore instance
 
 const Results = () => {
   const [candidates, setCandidates] = useState([]);
-  const [winner, setWinner] = useState(null); // State to track the winner
+  const [positions, setPositions] = useState({}); // Store candidates by position
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -14,36 +14,57 @@ const Results = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      setCandidates(candidateList);
 
-      // Calculate the winner based on the highest number of votes
-      if (candidateList.length > 0) {
-        const topCandidate = candidateList.reduce((prev, current) => {
-          return prev.votes > current.votes ? prev : current;
-        });
-        setWinner(topCandidate); // Set the winner
-      }
+      // Group candidates by position
+      const groupedByPosition = candidateList.reduce((acc, candidate) => {
+        const { position } = candidate;
+        if (!acc[position]) {
+          acc[position] = [];
+        }
+        acc[position].push(candidate);
+        return acc;
+      }, {});
+      
+      setPositions(groupedByPosition);
     };
 
     fetchResults();
   }, []);
 
-  return (
-    <div>
-      <h2>Election Results</h2>
-      <ul>
-        {candidates.map((candidate, index) => (
-          <li key={index}>
-            {candidate.name} - Total Votes: {candidate.votes}
-          </li>
-        ))}
-      </ul>
+  const getWinnerForPosition = (candidates) => {
+    return candidates.reduce((prev, current) => {
+      return (current.votes || 0) > (prev.votes || 0) ? current : prev;
+    });
+  };
 
-      {winner && (
-        <div style={{ marginTop: '20px', color: 'green', fontWeight: 'bold' }}>
-          <h3>Winner: {winner.name} with {winner.votes} votes!</h3>
-        </div>
-      )}
+  return (
+    <div className="results-container">
+      <h2>Election Results by Position</h2>
+      {Object.keys(positions).map((position) => {
+        const candidatesForPosition = positions[position];
+        const winner = getWinnerForPosition(candidatesForPosition); // Get winner for each position
+
+        return (
+          <div key={position} className="position-container">
+            <h3>{position}</h3> {/* Display Position as Heading */}
+            <ul>
+              {candidatesForPosition.map((candidate) => (
+                <li key={candidate.id}>
+                  <span>{candidate.name}</span>
+                  <span>Total Votes: {candidate.votes || 0}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Display Winner for this Position */}
+            {winner && (
+              <div className="winner">
+                Winner: {winner.name} with {winner.votes || 0} votes!
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };

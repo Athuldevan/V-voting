@@ -35,11 +35,11 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>User Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
       {hasVoted ? (
-        <p>You have already voted and cannot vote again.</p>
+        <p className="already-voted-message">You have already voted and cannot vote again.</p>
       ) : (
         <div>
           <input
