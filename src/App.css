@@ -5,7 +5,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #150aec, #c3d2e9); /* Gradient background */
+  background: linear-gradient(135deg, #726cec, #c3d2e9); /* Gradient background */
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -131,6 +131,7 @@ li:nth-child(even) {
   border-radius: 8px;
   font-size: 1.1em;
   cursor: pointer;
+  margin: 10px;
   transition: background-color 0.3s ease;
 }
 
@@ -461,4 +462,65 @@ button:hover {
 .error {
   color: red;
   margin-bottom: 15px;
+}
+
+.results-container {
+  text-align: center;
+  padding: 20px;
+  background-color: #f5f5f5; /* Light background for the container */
+}
+
+.positions-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center align the cards */
+  gap: 20px; /* Space between the cards */
+}
+
+.position-card {
+  background-color: #fff; /* White card background */
+  border-radius: 12px;
+  padding: 20px;
+  width: 300px; /* Fixed width for the cards */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  transition: transform 0.3s ease; /* Smooth animation */
+  text-align: left;
+}
+
+.position-card:hover {
+  transform: translateY(-5px); /* Hover effect */
+}
+
+.candidate-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.candidate-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.candidate-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.candidate-votes {
+  font-size: 14px;
+  color: #666; /* Slightly lighter text */
+}
+
+.winner {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.draw {
+  color: orange;
+  font-weight: bold;
+  margin-top: 10px;
 }
