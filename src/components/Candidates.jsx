@@ -7,18 +7,20 @@ const Candidates = () => {
   const [candidatesByPosition, setCandidatesByPosition] = useState({}); // Store grouped candidates by position
   const [votedPositions, setVotedPositions] = useState([]); // Track voted positions for the user
   const [loadingPositions, setLoadingPositions] = useState([]); // Track positions being voted on (for time lag prevention)
+  const [userYear, setUserYear] = useState(null); // Track user's year
   const navigate = useNavigate();
   const location = useLocation();
   const { userId } = location.state; // Get userId from Login
 
   useEffect(() => {
-    // Fetch the user's voted positions
+    // Fetch the user's voted positions and their year
     const fetchUserData = async () => {
       const userRef = doc(db, 'users', userId);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
-        const { votedPositions = [] } = userDoc.data();
+        const { votedPositions = [], year } = userDoc.data();
         setVotedPositions(votedPositions); // Set the voted positions
+        setUserYear(year); // Set the user's year
       }
     };
 
@@ -28,7 +30,14 @@ const Candidates = () => {
 
       // Group candidates by position
       const candidatesList = candidatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const groupedCandidates = candidatesList.reduce((acc, candidate) => {
+
+      // Filter candidates based on user's year and common positions
+      const filteredCandidates = candidatesList.filter(candidate => {
+        return candidate.isCommon || candidate.year === userYear; // Show common candidates or those matching user's year
+      });
+
+      // Group candidates by position
+      const groupedCandidates = filteredCandidates.reduce((acc, candidate) => {
         const { position } = candidate;
         if (!acc[position]) {
           acc[position] = [];
@@ -40,9 +49,11 @@ const Candidates = () => {
       setCandidatesByPosition(groupedCandidates); // Store the grouped candidates
     };
 
-    fetchUserData();
-    fetchCandidates();
-  }, [userId]);
+    if (userId) {
+      fetchUserData();
+      fetchCandidates();
+    }
+  }, [userId, userYear]);
 
   const handleVote = async (candidateId, currentVotes, position) => {
     if (loadingPositions.includes(position)) return; // Prevent voting while a vote is being cast for the same position
@@ -81,7 +92,9 @@ const Candidates = () => {
   };
 
   // Check if the user has voted for all positions
-  const allVoted = Object.keys(candidatesByPosition).length === votedPositions.length;
+  const allVoted = Object.keys(candidatesByPosition).every(
+    (position) => votedPositions.includes(position)
+  );
 
   return (
     <div className="candidates-container">
