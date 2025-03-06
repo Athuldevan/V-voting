@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
+import '../styles/Candidate.css'
 
 const Candidates = () => {
   const [candidatesByPosition, setCandidatesByPosition] = useState({}); // Store grouped candidates by position
@@ -10,9 +11,15 @@ const Candidates = () => {
   const [userYear, setUserYear] = useState(null); // Track user's year
   const navigate = useNavigate();
   const location = useLocation();
-  const { userId } = location.state; // Get userId from Login
+  const userId = location.state?.userId || null; // Use optional chaining with fallback
 
   useEffect(() => {
+    if (!userId) {
+      // Redirect to login if no userId is found
+      navigate('/login');
+      return;
+    }
+
     // Fetch the user's voted positions and their year
     const fetchUserData = async () => {
       const userRef = doc(db, 'users', userId);
@@ -49,11 +56,9 @@ const Candidates = () => {
       setCandidatesByPosition(groupedCandidates); // Store the grouped candidates
     };
 
-    if (userId) {
-      fetchUserData();
-      fetchCandidates();
-    }
-  }, [userId, userYear]);
+    fetchUserData();
+    fetchCandidates();
+  }, [userId, userYear, navigate]);
 
   const handleVote = async (candidateId, currentVotes, position) => {
     if (loadingPositions.includes(position)) return; // Prevent voting while a vote is being cast for the same position

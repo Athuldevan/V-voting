@@ -1,0 +1,65 @@
+/* Overall body styles for centering content */
+body {
+    background-color: #f0f0ff; /* Soft background color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #333; /* Text color */
+  }
+  
+  /* Election results container */
+  .results-container {
+    width: 80%; /* Reduced width to fit within viewport */
+    background-color: #fff; /* White background for the container */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  /* Individual election position section */
+  .position-section {
+    width: 45%; /* Each section takes up 45% of the container */
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Title for the election result */
+  .result-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  /* Candidate entry styles */
+  .candidate-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  
+ 
+  /* Styles for text inside winner/draw notices */
+  .notice-text {
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+  }
+  

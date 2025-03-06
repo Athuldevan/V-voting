@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase'; // Firestore instance
+import '../styles/Results.css';
 
 const Results = () => {
   const [positions, setPositions] = useState({}); // Store candidates by position

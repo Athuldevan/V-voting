@@ -1,0 +1,41 @@
+
+/* Checkbox Group */
+.checkboxGroup {
+    margin-bottom: 20px; /* Increased spacing */
+    display: flex;
+    flex-direction: row; /* Ensure they are aligned horizontally */
+    align-items: center; /* Vertically align checkbox and label */
+    gap: 10px; /* Space between checkbox and label */
+}
+
+/* Checkbox Label */
+.checkboxLabel {
+    display: inline-flex; /* Inline-flex to better align with the checkbox */
+    align-items: center;
+    color: #555;
+    font-weight: bold;
+    cursor: pointer;
+    gap: 8px; /* Space between checkbox and label text */
+    line-height: 1.5; /* Adjust line height to ensure label text aligns well */
+}
+
+/* Checkbox */
+.checkbox {
+    width: 20px; /* Slightly larger checkbox */
+    height: 20px; /* Slightly larger checkbox */
+    cursor: pointer;
+    accent-color: #7CFC00; /* Bright green for checkbox */
+    vertical-align: middle; /* Ensure checkbox aligns with text vertically */
+    transition: transform 0.2s ease-in-out; /* Smooth scaling transition */
+}
+
+/* Checkbox Hover Effect */
+.checkbox:hover {
+    transform: scale(1.1); /* Scale the checkbox slightly on hover */
+}
+
+/* Checkbox Checked Effect */
+.checkbox:checked {
+    background-color: #7CFC00; /* Green background when checked */
+    border-color: #7CFC00; /* Green border when checked */
+}
