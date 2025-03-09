@@ -7,6 +7,7 @@ import AdminLogin from './AdminLogin';
 import Results from './Results';
 import AdminDashboard from './AdminDashboard';
 import AllocateCandidate from './AllocateCandidate';
+import AllocateUser from './AllocateUser'; // Importing AllocateUser component
 import '../App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/results" element={<Results />} />
         <Route path="/admin/allocate-candidate" element={<AllocateCandidate />} />
+        <Route path="/admin/allocate-user" element={<AllocateUser />} /> {/* New route for AllocateUser */}
       </Routes>
     </Router>
   );

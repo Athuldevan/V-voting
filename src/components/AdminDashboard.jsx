@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore'; // Firebase Firestore imports
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { db } from '../firebase'; // Using Firestore initialized in firebase.js
-import '../styles/AdminLogin.css';
+import '../styles/AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [candidates, setCandidates] = useState([]);
@@ -45,12 +45,20 @@ const AdminDashboard = () => {
     navigate('/admin/allocate-candidate'); // Navigate to AllocateCandidate.jsx page
   };
 
+  const handleAllocateUser = () => {
+    navigate('/admin/allocate-user'); // Navigate to AllocateUser.jsx page
+  };
+
   return (
     <div className="admin-dashboard">
       <h2 className="dashboard-title">Admin Dashboard</h2>
       <div className="dashboard-buttons">
         <button className="dashboard-btn" onClick={handleViewResults}>View Results</button>
         <button className="dashboard-btn" onClick={handleAllocateCandidate}>Allocate Candidate</button>
+        
+        {/* New button for Allocate User */}
+        <button className="dashboard-btn" onClick={handleAllocateUser}>Allocate User</button>
+        
         <button className="dashboard-btn" onClick={toggleModal}>Overview</button>
       </div>
 

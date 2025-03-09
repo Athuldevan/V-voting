@@ -5,7 +5,10 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #726cec, #c3d2e9); /* Gradient background */
+  /* background: linear-gradient(135deg, #726cec, #c3d2e9); */
+   /* Gradient background */
+   background: #f5f7fa; /* Light background for the dashboard */
+
   height: 100vh;
   display: flex;
   justify-content: center;
