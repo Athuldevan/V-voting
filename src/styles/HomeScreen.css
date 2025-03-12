@@ -1,0 +1,127 @@
+/* HomeScreen.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto+Slab:wght@700&display=swap');
+
+.home-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fa; /* Set the background color */
+  font-family: 'Poppins', sans-serif;
+}
+
+.content-wrapper {
+  text-align: center;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.highlight {
+  font-family: 'Roboto Slab', serif; /* Change the font */
+  font-size: 3rem;
+  color: #007bff; /* Highlight color */
+  font-weight: bold;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
+  animation: glow 1.5s infinite alternate;
+  cursor: pointer;
+  text-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.highlight::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  background-color: #00aaff;
+  border-radius: 4px;
+  transform: scaleX(1); /* Underline is visible on page load */
+  transform-origin: left;
+  transition: background-color 0.4s ease;
+}
+
+.highlight:hover::after {
+  background-color: #0056b3;
+}
+
+.highlight:hover {
+  text-shadow: 0 0 20px rgba(0, 123, 255, 1), 0 0 30px rgba(0, 123, 255, 0.7);
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.7), 0 0 20px rgba(0, 123, 255, 0.7);
+  }
+  100% {
+    text-shadow: 0 0 20px rgba(0, 170, 255, 1), 0 0 30px rgba(0, 170, 255, 0.9);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.highlight {
+  animation: pulse 2s infinite;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.home-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.home-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-5px);
+}
+
+.home-btn:active {
+  background-color: #004099;
+  transform: translateY(2px);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

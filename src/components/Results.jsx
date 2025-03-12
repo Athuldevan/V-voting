@@ -31,50 +31,48 @@ const Results = () => {
     fetchResults();
   }, []);
 
-  // Logic to handle draws
   const getWinnerForPosition = (candidates) => {
-    const maxVotes = Math.max(...candidates.map(candidate => candidate.votes || 0)); // Find the highest number of votes
-    const topCandidates = candidates.filter(candidate => (candidate.votes || 0) === maxVotes); // Get all candidates with max votes
+    const maxVotes = Math.max(...candidates.map(candidate => candidate.votes || 0));
+    const topCandidates = candidates.filter(candidate => (candidate.votes || 0) === maxVotes);
 
-    // If more than one candidate has the max votes, it's a draw
     if (topCandidates.length > 1) {
       return { draw: true, candidates: topCandidates };
     }
-
-    // If only one candidate has the max votes, they are the winner
     return { draw: false, candidate: topCandidates[0] };
   };
 
   return (
     <div className="results-container">
-      <h2>Election Results by Position</h2>
-      <div className="positions-container"> {/* Flexbox container for positions */}
+      <h2 className="results-title">Election Results</h2>
+      <div className="positions-wrapper">
         {Object.keys(positions).map((position) => {
           const candidatesForPosition = positions[position];
-          const result = getWinnerForPosition(candidatesForPosition); // Get winner or draw for each position
+          const result = getWinnerForPosition(candidatesForPosition);
 
           return (
             <div key={position} className="position-card">
-              <h3>{position}</h3> {/* Display Position as Heading */}
-              <ul className="candidate-list">
-                {candidatesForPosition.map((candidate) => (
-                  <li key={candidate.id} className="candidate-item">
-                    <span className="candidate-name">{candidate.name}</span>
-                    <span className="candidate-votes">Votes: {candidate.votes || 0}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Display Result for this Position */}
-              {result.draw ? (
-                <div className="draw">
-                  Draw between: {result.candidates.map(candidate => candidate.name).join(', ')} with {result.candidates[0].votes} votes!
-                </div>
-              ) : (
-                <div className="winner">
-                  Winner: {result.candidate.name} with {result.candidate.votes} votes!
-                </div>
-              )}
+              <div className="position-header">
+                <h3 className="position-title">{position}</h3>
+              </div>
+              <div className="position-body">
+                <ul className="candidate-list">
+                  {candidatesForPosition.map((candidate) => (
+                    <li key={candidate.id} className="candidate-item">
+                      <span className="candidate-name">{candidate.name}</span>
+                      <span className="candidate-votes">{candidate.votes || 0} votes</span>
+                    </li>
+                  ))}
+                </ul>
+                {result.draw ? (
+                  <div className="draw-info">
+                    Draw between: {result.candidates.map(candidate => candidate.name).join(', ')} with {result.candidates[0].votes} votes!
+                  </div>
+                ) : (
+                  <div className="winner-info">
+                    Winner: <span className="winner-name">{result.candidate.name}</span> with {result.candidate.votes} votes!
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}

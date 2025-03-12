@@ -2,48 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import '../styles/Candidate.css'
+import '../styles/Candidate.css';
 
 const Candidates = () => {
-  const [candidatesByPosition, setCandidatesByPosition] = useState({}); // Store grouped candidates by position
-  const [votedPositions, setVotedPositions] = useState([]); // Track voted positions for the user
-  const [loadingPositions, setLoadingPositions] = useState([]); // Track positions being voted on (for time lag prevention)
-  const [userYear, setUserYear] = useState(null); // Track user's year
+  const [candidatesByPosition, setCandidatesByPosition] = useState({});
+  const [votedPositions, setVotedPositions] = useState([]);
+  const [loadingPositions, setLoadingPositions] = useState([]);
+  const [userYear, setUserYear] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = location.state?.userId || null; // Use optional chaining with fallback
+  const userId = location.state?.userId || null;
 
   useEffect(() => {
     if (!userId) {
-      // Redirect to login if no userId is found
       navigate('/login');
       return;
     }
 
-    // Fetch the user's voted positions and their year
     const fetchUserData = async () => {
       const userRef = doc(db, 'users', userId);
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         const { votedPositions = [], year } = userDoc.data();
-        setVotedPositions(votedPositions); // Set the voted positions
-        setUserYear(year); // Set the user's year
+        setVotedPositions(votedPositions);
+        setUserYear(year);
       }
     };
 
     const fetchCandidates = async () => {
       const candidatesCollection = collection(db, 'candidates');
       const candidatesSnapshot = await getDocs(candidatesCollection);
-
-      // Group candidates by position
       const candidatesList = candidatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      // Filter candidates based on user's year and common positions
       const filteredCandidates = candidatesList.filter(candidate => {
-        return candidate.isCommon || candidate.year === userYear; // Show common candidates or those matching user's year
+        return candidate.isCommon || candidate.year === userYear;
       });
 
-      // Group candidates by position
       const groupedCandidates = filteredCandidates.reduce((acc, candidate) => {
         const { position } = candidate;
         if (!acc[position]) {
@@ -53,7 +47,7 @@ const Candidates = () => {
         return acc;
       }, {});
 
-      setCandidatesByPosition(groupedCandidates); // Store the grouped candidates
+      setCandidatesByPosition(groupedCandidates);
     };
 
     fetchUserData();
@@ -61,9 +55,9 @@ const Candidates = () => {
   }, [userId, userYear, navigate]);
 
   const handleVote = async (candidateId, currentVotes, position) => {
-    if (loadingPositions.includes(position)) return; // Prevent voting while a vote is being cast for the same position
+    if (loadingPositions.includes(position)) return;
 
-    setLoadingPositions([...loadingPositions, position]); // Set position as loading
+    setLoadingPositions([...loadingPositions, position]);
 
     try {
       const candidateRef = candidateId ? doc(db, 'candidates', candidateId) : null;
@@ -71,76 +65,77 @@ const Candidates = () => {
 
       if (candidateId) {
         const newVotes = isNaN(currentVotes) ? 1 : currentVotes + 1;
-
-        // Update votes in Firestore for the candidate if NOTA is not selected
-        await updateDoc(candidateRef, {
-          votes: newVotes,
-        });
+        await updateDoc(candidateRef, { votes: newVotes });
       }
 
-      // Update the user's votedPositions field in Firestore
       await updateDoc(userRef, {
-        votedPositions: [...votedPositions, position], // Add the position to the votedPositions array
+        votedPositions: [...votedPositions, position],
       });
 
       setVotedPositions([...votedPositions, position]);
-      setLoadingPositions(loadingPositions.filter(pos => pos !== position)); // Remove from loading state
+      setLoadingPositions(loadingPositions.filter(pos => pos !== position));
     } catch (error) {
       console.error('Error casting vote: ', error);
       alert('Failed to cast vote. Please try again.');
-      setLoadingPositions(loadingPositions.filter(pos => pos !== position)); // Remove from loading state on error
+      setLoadingPositions(loadingPositions.filter(pos => pos !== position));
     }
   };
 
   const handleSubmit = () => {
-    navigate('/home'); // Redirect to home after all votes are submitted
+    navigate('/home');
   };
 
-  // Check if the user has voted for all positions
   const allVoted = Object.keys(candidatesByPosition).every(
     (position) => votedPositions.includes(position)
   );
 
   return (
-    <div className="candidates-container">
-      <h2 className="candidates-header">Candidates List</h2>
-      {/* Iterate over positions and candidates */}
-      {Object.entries(candidatesByPosition).map(([position, candidates]) => (
-        <div key={position} className="position-section">
-          <h3 className="position-title">{position}</h3> {/* Display position heading */}
-          <ul className="candidates-list">
-            {candidates.map(candidate => (
-              <li key={candidate.id} className="candidate-item">
-                <span className="candidate-name">{candidate.name}</span>
+    <div className="candidates-wrapper-new-layout">
+      <div className="candidates-header">
+        <h2>Candidates</h2>
+      </div>
+      <div className="candidates-section">
+        {Object.entries(candidatesByPosition).map(([position, candidates]) => (
+          <div key={position} className="position-card-grid">
+            <h3 className="position-title" >{position}</h3>
+            <div className="candidates-grid">
+              {candidates.map(candidate => (
+                <div key={candidate.id} className="candidate-tile">
+                  <div className="candidate-info">
+                    <p className="candidate-name">{candidate.name}</p>
+                  </div>
+                  <button
+                    className={`vote-btn-tile ${votedPositions.includes(position) ? 'voted' : ''}`}
+                    onClick={() => handleVote(candidate.id, candidate.votes, position)}
+                    disabled={votedPositions.includes(position) || loadingPositions.includes(position)}
+                  >
+                    {votedPositions.includes(position) ? 'Voted' : (loadingPositions.includes(position) ? 'Voting...' : 'Vote')}
+                  </button>
+                </div>
+              ))}
+              <div className="candidate-tile">
+                <div className="candidate-info">
+                  <p className="candidate-name">NOTA</p>
+                </div>
                 <button
-                  className="vote-btn"
-                  onClick={() => handleVote(candidate.id, candidate.votes, position)}
-                  disabled={votedPositions.includes(position) || loadingPositions.includes(position)} // Disable if already voted or vote is being cast
+                  className={`vote-btn-tile ${votedPositions.includes(position) ? 'voted' : ''}`}
+                  onClick={() => handleVote(null, null, position)}
+                  disabled={votedPositions.includes(position) || loadingPositions.includes(position)}
                 >
-                  {votedPositions.includes(position) ? 'Voted' : (loadingPositions.includes(position) ? 'Voting...' : 'Vote')}
+                  {votedPositions.includes(position) ? 'Voted' : (loadingPositions.includes(position) ? 'Voting...' : 'Vote NOTA')}
                 </button>
-              </li>
-            ))}
-            {/* Add NOTA option */}
-            <li className="candidate-item">
-              <span className="candidate-name">NOTA</span>
-              <button
-                className="vote-btn"
-                onClick={() => handleVote(null, null, position)} // Handle NOTA vote
-                disabled={votedPositions.includes(position) || loadingPositions.includes(position)} // Disable if already voted or vote is being cast
-              >
-                {votedPositions.includes(position) ? 'Voted' : (loadingPositions.includes(position) ? 'Voting...' : 'Vote NOTA')}
-              </button>
-            </li>
-          </ul>
-        </div>
-      ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-      {/* Show Submit button only if all positions are voted */}
       {allVoted && (
-        <button className="submit-btn" onClick={handleSubmit}>
-          Submit Votes
-        </button>
+        <div className="submit-btn-container">
+          <button className="submit-btn" onClick={handleSubmit}>
+            Submit Votes
+          </button>
+        </div>
       )}
     </div>
   );

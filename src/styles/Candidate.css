@@ -1,83 +1,120 @@
-/* Main container for the candidates page */
-.candidates-container {
-    width: 2%; /* Adjust the width for a better layout */
-    margin: 0 auto;
-    height: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, #726cec, #c3d2e9); /* Gradient background */
+/* Wrapper for the entire page */
+.candidates-wrapper-new-layout {
+  padding: 10px;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
 
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    
-  }
-  
-  /* Position title styling (e.g., GENERAL SECRETARY) */
-  .position-header {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: left;
-    padding: 10px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-    color: #333;
-  }
-  
-  /* Individual candidate container */
-  .candidate-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #f7f7f7;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Candidate name styling */
-  .candidate-name {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #333;
-  }
-  
-  /* Vote button styling (voted, not voted) */
-  .vote-button {
-    font-size: 0.9rem;
-    font-weight: bold;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background-color: #dcdcdc; /* Default */
-    color: #333;
-  }
-  
-  /* Style when a vote is already cast */
-  .vote-button.voted {
-    background-color: #d1e7dd; /* Light green for voted status */
-    color: #155724;
-  }
-  
-  /* NOTA button styling */
-  .nota {
-    background-color: #f5c6cb; /* Light red for NOTA */
-    color: #721c24;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .main-container {
-      width: 95%;
-    }
-  
-    .candidate-box {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .vote-button {
-      margin-top: 10px;
-    }
-  }
-  
-  
+/* Header section */
+.candidates-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.candidates-header h2 {
+  font-size: 1.8rem;
+  color: red;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Position card grid */
+.position-card-grid {
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+/* Position title */
+.position-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #ffffff; /* Lighter text color for contrast */
+  background-color: #4757c1; /*Dark background for better visibility*/
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Grid for candidates */
+.candidates-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Candidate tile card */
+.candidate-tile {
+  background-color: #e0e0e0; /* Slightly darker background for tiles */
+  color: brown;
+  padding: 15px;
+  width: 200px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.candidate-tile:hover {
+  transform: scale(1.05);
+}
+
+.candidate-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+/* Vote button styling */
+.vote-btn-tile {
+  padding: 8px 16px;
+  background-color: #11ac1e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.vote-btn-tile.voted {
+  background-color: #28a745;
+}
+
+.vote-btn-tile:hover {
+  background-color: #27e043;
+}
+
+.vote-btn-tile:disabled {
+  background-color: #55585c82;
+}
+
+/* Submit button for votes */
+.submit-btn-container {
+  margin-top: 30px;
+}
+
+.submit-btn {
+  padding: 12px 25px;
+  background-color: #059e28fc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}

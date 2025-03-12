@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase'; // Ensure your Firebase config is imported
-import '../styles/AllocateCandidates.css'
+import '../styles/AllocateCandidates.css'; // Import the CSS file
+
 const AllocateCandidate = () => {
   const [candidateName, setCandidateName] = useState('');
   const [position, setPosition] = useState('');
   const [isCommon, setIsCommon] = useState(false);
   const [year, setYear] = useState('');
+  const [showModal, setShowModal] = useState(false); // For showing the modal
 
   // Year options for dropdown (number format)
   const yearOptions = [1, 2, 3, 4];
 
-  // Add confirmation dialog before submitting
+  // Function to handle allocation after confirmation
   const handleAllocate = async (e) => {
     e.preventDefault();
 
@@ -21,10 +23,12 @@ const AllocateCandidate = () => {
       return;
     }
 
-    // Confirmation dialog before allocation
-    const isConfirmed = window.confirm("Are you sure you want to allocate this candidate?");
-    if (!isConfirmed) return; // Exit if not confirmed
+    // Show confirmation modal
+    setShowModal(true);
+  };
 
+  // Function to proceed with the allocation after confirmation
+  const allocateConfirmed = async () => {
     try {
       await addDoc(collection(db, 'candidates'), {
         name: candidateName,
@@ -39,8 +43,9 @@ const AllocateCandidate = () => {
       setPosition('');
       setIsCommon(false);
       setYear('');
+      setShowModal(false); // Close the modal
 
-      // Success notification
+      // Success notification (you can replace this with a better UI notification)
       alert('Candidate allocated successfully');
     } catch (error) {
       console.error('Error allocating candidate: ', error);
@@ -110,6 +115,23 @@ const AllocateCandidate = () => {
 
         <button type="submit" className="button">Allocate Candidate</button>
       </form>
+
+      {/* Confirmation Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <p>Are you sure you want to allocate this candidate?</p>
+            <div className="modal-buttons">
+              <button className="modal-button confirm" onClick={allocateConfirmed}>
+                Yes
+              </button>
+              <button className="modal-button cancel" onClick={() => setShowModal(false)}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

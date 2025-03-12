@@ -1,41 +1,66 @@
-
-/* Checkbox Group */
-.checkboxGroup {
-    margin-bottom: 20px; /* Increased spacing */
-    display: flex;
-    flex-direction: row; /* Ensure they are aligned horizontally */
-    align-items: center; /* Vertically align checkbox and label */
-    gap: 10px; /* Space between checkbox and label */
-}
-
-/* Checkbox Label */
-.checkboxLabel {
-    display: inline-flex; /* Inline-flex to better align with the checkbox */
-    align-items: center;
-    color: #555;
-    font-weight: bold;
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #f4f4f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .header {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+  }
+  
+  .label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #34495e;
+  }
+  
+  .input, .select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .input:hover, .select:hover {
+    border-color: #2ecc71;
+  }
+  
+  .checkboxGroup {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .checkboxLabel {
+    font-size: 16px;
+    color: #34495e;
+  }
+  
+  .button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    gap: 8px; /* Space between checkbox and label text */
-    line-height: 1.5; /* Adjust line height to ensure label text aligns well */
-}
-
-/* Checkbox */
-.checkbox {
-    width: 20px; /* Slightly larger checkbox */
-    height: 20px; /* Slightly larger checkbox */
-    cursor: pointer;
-    accent-color: #7CFC00; /* Bright green for checkbox */
-    vertical-align: middle; /* Ensure checkbox aligns with text vertically */
-    transition: transform 0.2s ease-in-out; /* Smooth scaling transition */
-}
-
-/* Checkbox Hover Effect */
-.checkbox:hover {
-    transform: scale(1.1); /* Scale the checkbox slightly on hover */
-}
-
-/* Checkbox Checked Effect */
-.checkbox:checked {
-    background-color: #7CFC00; /* Green background when checked */
-    border-color: #7CFC00; /* Green border when checked */
-}
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .button:hover {
+    background-color: #2ecc71;
+    transform: scale(1.05);
+  }
+  
