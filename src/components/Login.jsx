@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../firebase'; // Firestore instance
+import { db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css'
-
 
 const Login = () => {
   const [admissionNumber, setAdmissionNumber] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
-  const [hasVoted, setHasVoted] = useState(false); // Tracks if user has voted
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -23,11 +20,12 @@ const Login = () => {
       } else {
         querySnapshot.forEach((doc) => {
           const userData = doc.data();
+          const userId = doc.id;  // Get the userId from the doc ID
           if (userData.voted) {
-            setHasVoted(true); // User has already voted, so set hasVoted to true
+            setError('You have already voted.');
           } else {
-            // If the user has not voted, navigate to the candidates page and pass the user ID
-            navigate('/candidates', { state: { userId: doc.id } });
+            // Navigate to Otpauth with email and userId
+            navigate('/otpauth', { state: { email: userData.email, userId } });
           }
         });
       }
@@ -40,25 +38,19 @@ const Login = () => {
     <div className="login-container">
       <h2>User Login</h2>
       {error && <p className="error-message">{error}</p>}
-      {hasVoted ? (
-        <p className="already-voted-message">You have already voted and cannot vote again.</p>
-      ) : (
-        <div>
-          <input
-            type="text"
-            value={admissionNumber}
-            onChange={(e) => setAdmissionNumber(e.target.value)}
-            placeholder="Enter Admission Number"
-          />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter Name"
-          />
-          <button onClick={handleLogin}>Login</button>
-        </div>
-      )}
+      <input
+        type="text"
+        value={admissionNumber}
+        onChange={(e) => setAdmissionNumber(e.target.value)}
+        placeholder="Enter Admission Number"
+      />
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Enter Name"
+      />
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 };

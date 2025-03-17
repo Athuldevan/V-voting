@@ -7,6 +7,7 @@ const AllocateUser = () => {
   const [admissionNumber, setAdmissionNumber] = useState('');
   const [year, setYear] = useState(''); // Still a string here for input handling
   const [name, setName] = useState('');
+  const [email, setEmail] = useState(''); // New email state
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -14,13 +15,14 @@ const AllocateUser = () => {
     e.preventDefault();
 
     try {
-      console.log('Submitting user details:', admissionNumber, year, name); // Debug log
+      console.log('Submitting user details:', admissionNumber, year, name, email); // Debug log
 
       // Add user to Firestore
       await addDoc(collection(db, 'users'), {
         admissionNumber,
         year: Number(year), // Convert year to a number
         name,
+        email, // Add email to Firestore
         votedPosition: [] // Automatically set as an empty array
       });
 
@@ -28,6 +30,7 @@ const AllocateUser = () => {
       setAdmissionNumber('');
       setYear('');
       setName('');
+      setEmail(''); // Reset email field
       setSuccessMessage('User added successfully!');
       setErrorMessage('');
 
@@ -55,7 +58,7 @@ const AllocateUser = () => {
         <div className="form-group">
           <label>Year</label>
           <input
-            type="number" // Changed input type to number
+            type="number" // Input type is number
             value={year}
             onChange={(e) => setYear(e.target.value)}
             required
@@ -70,6 +73,15 @@ const AllocateUser = () => {
             required
           />
         </div>
+        <div className="form-group">
+          <label>Email</label> {/* New email input field */}
+          <input
+            type="email" // Input type email for validation
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
         <button type="submit">Add User</button>
       </form>
       {successMessage && <p className="success-message">{successMessage}</p>}
@@ -79,3 +91,4 @@ const AllocateUser = () => {
 };
 
 export default AllocateUser;
+
